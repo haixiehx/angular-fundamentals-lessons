@@ -1,39 +1,28 @@
-import { Component } from '@angular/core';
 import { Car } from './car';
+import { Component } from '@angular/core';
+import { ListingComponent } from './listing/listing.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
+  imports: [ListingComponent],
   template: `
     <h1>Saved Cars {{ savedCarList.length }}</h1>
     <section class="container">
       <!-- This article element represents and entire listing -->
-      <article class="listing">
-        <div class="image-parent">
-          <img class="product-image" src="https://placehold.co/100x100" />
-        </div>
-        <section class="details">
-          <p class="title"><!-- car make and model--></p>
-          <hr />
-          <p class="detail">
-            <span>Year</span>
-            <span><!-- year --></span>
-          </p>
-          <div class="detail">
-            <span>Transmission</span>
-            <span><!-- transmission --></span>
-          </div>
-          <p class="detail">
-            <span>Mileage</span>
-            <span><!-- miles --></span>
-          </p>
-          <p class="detail">
-            <span>Price</span>
-            <span><!-- price --></span>
-          </p>
-        </section>
-      </article>
+      @for(item of carList; track item) {
+      <app-listing [car]="item" (carSaved)="addCarToSaved($event)" />
+      }
       <!-- end car listing markup -->
+
+      <article>
+        <h2>Saved Cars</h2>
+        <ul>
+          @for(item of savedCarList; track item) {
+          <li>{{ item.make }} {{ item.model }}</li>
+          }
+        </ul>
+      </article>
     </section>
   `,
   styles: [],
@@ -74,4 +63,8 @@ export class AppComponent {
       transmission: 'Automatic',
     },
   ];
+
+  addCarToSaved(car: Car) {
+    this.savedCarList.push(car);
+  }
 }
